@@ -36,11 +36,12 @@ async function fetchChannelMessages(client, channel) {
 /**
  * Fetch all the messages from a Discord Guild.
  * @param {module:"discord.js".Client} client - The Discord Client.
+ * @param {string} - A guild ID
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
  */
-async function fetchGuildMessages(client) {
+async function fetchGuildMessages(client, guildID) {
 	const m = [];
-	const channels = client.guilds.cache.get('507389389098188820').channels.cache.filter(c => c.isText());
+	const channels = client.guilds.cache.get(guildID).channels.cache.filter(c => c.isText());
 	console.log(channels);
 	for (const channel of channels.array()) {
 		const messages = await fetchChannelMessages(client, channel);
