@@ -10,7 +10,7 @@
 		"discord.js": ">=12.4.0"
 	},
 	"main": "main.js",
-	"name": "discord-fetch",
+	"name": "discord-fetch-messages",
 	"prettier": {
 		"arrowParens": "avoid",
 		"endOfLine": "lf",
