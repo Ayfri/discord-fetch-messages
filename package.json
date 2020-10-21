@@ -29,5 +29,5 @@
 	"scripts": {
 		"prettier": "prettier --write main.js package.json README.md"
 	},
-	"version": "1.0.1"
+	"version": "1.0.2"
 }
