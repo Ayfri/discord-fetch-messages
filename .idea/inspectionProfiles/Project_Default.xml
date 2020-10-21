@@ -1,0 +1,20 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="123456789-987654321_Configuration-ApplicationAvoidimproperplatformusagePrivateactivity" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_Configuration-ApplicationAvoidimproperplatformusagePublicactivity" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_Configuration-ApplicationAvoidimproperplatformusageSetexportedexplicitly" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_Configuration-UserInterfaceAvoidTapjackingSetfilterTouchesWhenObscuredtotrueImageButton" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_DataProtection-SecureCommunicationAvoidDataExposureDisablecleartexttraffic" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_DataProtection-SecureCommunicationAvoidDataExposureSetdisabledcleartexttrafficexplicitly" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_InformationLeakageImproperErrorhandlingSeterror-page400" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_InformationLeakageImproperErrorhandlingSeterror-page404" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_InformationLeakageImproperErrorhandlingSeterror-page500" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_InformationLeakageImproperErrorhandlingSeterror-page503" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_InformationLeakageImproperErrorhandlingSeterror-pagejava.io.IOException" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_InformationLeakageImproperErrorhandlingSeterror-pagejavax.servlet.ServletException" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_Operations-BinaryProtectionsPreventmaliciousinjectionsDisablebackups" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_VulnerableComponentsAvoidusingdependencieswithknownvulnerabilitiesUselatestcommons-lang3version" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="123456789-987654321_VulnerableComponentsAvoidusingdependencieswithknownvulnerabilitiesUsesensei-secure-libraryversion2.6" enabled="true" level="WARNING" enabled_by_default="true" />
+  </profile>
+</component>
