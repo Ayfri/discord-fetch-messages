@@ -1,7 +1,7 @@
 /**
- * Fetch all the messages from a Discord TextChannel
- * @param {module:"discord.js".Client} client
- * @param {module:"discord.js".TextChannel | module:"discord.js".NewsChannel} channel
+ * Fetch all the messages from a Discord TextChannel.
+ * @param {module:"discord.js".Client} client - Your Discord.js Client.
+ * @param {module:"discord.js".TextChannel | module:"discord.js".NewsChannel} channel - The ID of the Discord TextChannel.
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
  */
 async function fetchChannelMessages(client, channel) {
@@ -26,7 +26,7 @@ async function fetchChannelMessages(client, channel) {
 		if (messages.size === 0) break;
 
 		lastMessageID = messages.last().id;
-		console.log(channel.name, total.length);
+		console.log(`#${channel.name} : ${total.length}`);
 		total.push(...messages.array());
 	}
 
@@ -35,15 +35,17 @@ async function fetchChannelMessages(client, channel) {
 
 /**
  * Fetch all the messages from a Discord Guild.
- * @param {module:"discord.js".Client} client - The Discord Client.
- * @param {string} guildID - A guild ID.
+ * @param {module:"discord.js".Client} client - Your Discord.js Client.
+ * @param {string} guildID - The ID of the Guild to be fetch.
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
  */
 async function fetchGuildMessages(client, guildID) {
 	const m = [];
 	const channels = client.guilds.cache.get(guildID).channels.cache.filter(c => c.isText());
-	console.log(channels);
+	console.log(`Getting the messages from these channels : ${channels.map(c => `#${c.name}`).sort().join('\n')}`);
+	
 	for (const channel of channels.array()) {
+		console.log(`Getting messages from : #${channel.name}.`)
 		const messages = await fetchChannelMessages(client, channel);
 
 		if (!m.find(c => c.id === channel.id))
@@ -54,6 +56,7 @@ async function fetchGuildMessages(client, guildID) {
 		m.find(c => c.id === channel.id).messages.push(...messages.map(m => m.cleanContent));
 	}
 
+	console.log(`Finished fetching messages, messages count: ${m.length}`);
 	return m;
 }
 
