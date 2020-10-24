@@ -36,7 +36,7 @@ async function fetchChannelMessages(client, channel) {
 /**
  * Fetch all the messages from a Discord Guild.
  * @param {module:"discord.js".Client} client - The Discord Client.
- * @param {string} - A guild ID
+ * @param {string} guildID - A guild ID.
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
  */
 async function fetchGuildMessages(client, guildID) {
