@@ -9,6 +9,12 @@
 		"node": ">=14.0.0",
 		"discord.js": ">=12.4.0"
 	},
+	"keywords": [
+		"discord.js",
+		"discord-messages",
+		"discord-bot",
+		"fetch"
+	],
 	"main": "main.js",
 	"name": "discord-fetch-messages",
 	"prettier": {
