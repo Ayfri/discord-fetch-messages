@@ -11,10 +11,9 @@ A npm package to fetch all the messages from a guild or a channel.
 ## How to use it
 
 <strong>⚠️ READ BEFORE USING ⚠️ <br>
-These operations took a long time to process. Be patient and avoid doing this often because it's doing a lot of requests to Discord and you can be banned for sending too many requests to Discord.
-</strong> <br>
+These operations took a long time to process. Be patient and avoid doing this often because it's doing a lot of requests to Discord and you can be banned for sending too many requests to Discord. <br>
 ⚠️ READ BEFORE USING ⚠️
-<strong>
+</strong>
 
 ```js
 const fetchedGuildMessages = await require('discord-fetch-messages').fetchGuildMessages(client, id);
