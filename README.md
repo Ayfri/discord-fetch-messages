@@ -7,7 +7,6 @@
 
 A npm package to fetch all the messages from a guild or a channel.
 
-
 ## How to use it
 
 <strong>⚠️ READ BEFORE USING ⚠️ <br>
@@ -22,4 +21,5 @@ const fetchedChannelMessages = await require('discord-fetch-messages').fetchChan
 ```
 
 Note :
+
 > Node.js > 14 is required.

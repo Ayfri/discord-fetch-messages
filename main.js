@@ -42,10 +42,15 @@ async function fetchChannelMessages(client, channel) {
 async function fetchGuildMessages(client, guildID) {
 	const m = [];
 	const channels = client.guilds.cache.get(guildID).channels.cache.filter(c => c.isText());
-	console.log(`Getting the messages from these channels : ${channels.map(c => `#${c.name}`).sort().join('\n')}`);
-	
+	console.log(
+		`Getting the messages from these channels : ${channels
+			.map(c => `#${c.name}`)
+			.sort()
+			.join('\n')}`
+	);
+
 	for (const channel of channels.array()) {
-		console.log(`Getting messages from : #${channel.name}.`)
+		console.log(`Getting messages from : #${channel.name}.`);
 		const messages = await fetchChannelMessages(client, channel);
 
 		if (!m.find(c => c.id === channel.id))
