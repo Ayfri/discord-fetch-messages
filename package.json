@@ -1,9 +1,9 @@
 {
 	"description": "A npm package for fetching messages from a Discord Guild or a Discord Channel.",
 	"devDependencies": {
-		"discord.js": "^12.5.0",
-		"prettier": "^2.2.0",
-		"typescript": "^4.1.2"
+		"discord.js": "^12.5.1",
+		"prettier": "^2.2.1",
+		"typescript": "^4.1.3"
 	},
 	"engineStrict": true,
 	"engines": {
