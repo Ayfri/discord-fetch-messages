@@ -15,11 +15,28 @@ These operations took a long time to process. Be patient and avoid doing this of
 </strong>
 
 ```js
-const fetchedGuildMessages = await require('discord-fetch-messages').fetchGuildMessages(client, id);
+const fetcher = new Fetcher(client);
 
-const fetchedChannelMessages = await require('discord-fetch-messages').fetchChannelMessages(client, id);
+fetcher.on('fetchChannel', async channel => {
+	await message.channel.send(`Fetching <#${channel.id}>.`);
+});
+
+await fetcher.fetchGuild(guildID);
+await fetcher.fetchChannel(channel);
 ```
 
-Note :
+##
 
+## Event list :
+
+| Event Name     | Description                                                              | Arguments                                                                                        |
+| -------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `fetchChannel` | Emitter when fetching a Channel.                                         | `channel`: The channel fetched.                                                                  |
+| `fetchGuild`   | Emitted when fetching a Guild.                                           | `guild`: The guild fetched.                                                                      |
+| `fetch`        | Emitted after fetched a bulk a of messages, can fetch 0 to 100 messages. | `length`: The number of messages fetched.<br/>`messages`: The messages fetched, as a Collection. |
+
+You can also use a `fetching` boolean property that is set to true when fetching a bulk of message, then to false.
+
+> Note :
+>
 > Node.js > 14 is required.
