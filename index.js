@@ -1,10 +1,13 @@
+const { deprecate } = require('util');
 const { Fetcher } = require('./dist/Fetcher.js');
 
 /**
  * Fetch all the messages from a Discord TextChannel.
+ *
  * @param {module:"discord.js".Client} client - Your Discord.js Client.
  * @param {module:"discord.js".TextChannel | module:"discord.js".NewsChannel} channel - The ID of the Discord TextChannel.
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
+ * @deprecated Use Fetcher class instead.
  */
 async function fetchChannelMessages(client, channel) {
 	const total = [];
@@ -40,6 +43,7 @@ async function fetchChannelMessages(client, channel) {
  * @param {module:"discord.js".Client} client - Your Discord.js Client.
  * @param {string} guildID - The ID of the Guild to be fetch.
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
+ * @deprecated Use Fetcher class instead.
  */
 async function fetchGuildMessages(client, guildID) {
 	const total = [];
@@ -66,6 +70,9 @@ async function fetchGuildMessages(client, guildID) {
 	console.log(`Finished fetching messages, messages count: ${total.length}`);
 	return total;
 }
+
+deprecate(fetchChannelMessages, 'fetchChannelMessages() is deprecated. Use Fetcher class instead.')
+deprecate(fetchGuildMessages, 'fetchGuildMessages() is deprecated. Use Fetcher class instead.')
 
 module.exports = {
 	Fetcher,
