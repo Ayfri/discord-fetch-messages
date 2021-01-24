@@ -3,18 +3,16 @@
 		"alwaysStrict": true,
 		"declaration": true,
 		"declarationDir": "types",
-		"lib": [
-			"ESNext"
-		],
+		"lib": ["ESNext"],
 		"module": "commonjs",
+		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"outDir": "dist",
 		"pretty": true,
 		"rootDir": "src",
+		"skipLibCheck": true,
 		"strict": true,
 		"target": "esNext"
 	},
-	"exclude": [
-		"node_modules"
-	]
+	"exclude": ["node_modules"]
 }

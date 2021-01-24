@@ -1,3 +1,5 @@
+const { Fetcher } = require('./dist/Fetcher.js');
+
 /**
  * Fetch all the messages from a Discord TextChannel.
  * @param {module:"discord.js".Client} client - Your Discord.js Client.
@@ -66,6 +68,7 @@ async function fetchGuildMessages(client, guildID) {
 }
 
 module.exports = {
+	Fetcher,
 	fetchGuildMessages,
 	fetchChannelMessages,
 };
