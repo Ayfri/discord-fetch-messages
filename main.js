@@ -40,7 +40,7 @@ async function fetchChannelMessages(client, channel) {
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
  */
 async function fetchGuildMessages(client, guildID) {
-	const m = [];
+	const total = [];
 	const channels = client.guilds.cache.get(guildID).channels.cache.filter(c => c.isText());
 	console.log(
 		`Getting the messages from these channels : ${channels
@@ -49,20 +49,20 @@ async function fetchGuildMessages(client, guildID) {
 			.join('\n')}`
 	);
 
-	for (const channel of channels.array()) {
-		console.log(`Getting messages from : #${channel.name}.`);
-		const messages = await fetchChannelMessages(client, channel);
+	for (const textChannel of channels.array()) {
+		console.log(`Getting messages from : #${textChannel.name}.`);
+		const messages = await fetchChannelMessages(client, textChannel);
 
-		if (!m.find(c => c.id === channel.id))
-			m.push({
-				id: channel.id,
+		if (!total.find(channel => channel.id === textChannel.id))
+			total.push({
+				id: textChannel.id,
 				messages: [],
 			});
-		m.find(c => c.id === channel.id).messages.push(...messages.map(m => m.cleanContent));
+		total.find(channel => channel.id === textChannel.id).messages.push(...messages.map(m => m.cleanContent));
 	}
 
-	console.log(`Finished fetching messages, messages count: ${m.length}`);
-	return m;
+	console.log(`Finished fetching messages, messages count: ${total.length}`);
+	return total;
 }
 
 module.exports = {
