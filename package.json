@@ -19,7 +19,7 @@
 		"discord-bot",
 		"fetch"
 	],
-	"main": "main.js",
+	"main": "index.js",
 	"name": "discord-fetch-messages",
 	"prettier": {
 		"arrowParens": "avoid",
