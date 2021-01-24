@@ -37,7 +37,7 @@
 	"scripts": {
 		"build": "npm run prettier && tsc",
 		"prepare": "npm run build",
-		"prettier": "prettier --write main.js package.json README.md"
+		"prettier": "prettier . --write"
 	},
 	"version": "1.1.2"
 }
