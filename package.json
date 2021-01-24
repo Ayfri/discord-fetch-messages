@@ -31,7 +31,7 @@
 		"trailingComma": "es5",
 		"useTabs": true
 	},
-	"types": "./types/main.d.ts",
+	"types": "types",
 	"readme": "https://github.com/Ayfri/discord-fetch/blob/main/README.md",
 	"repository": {
 		"type": "git",
