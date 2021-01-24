@@ -1,16 +1,31 @@
 import { Client, Message, Collection, Snowflake, TextChannel, Guild } from 'discord.js';
 import { EventEmitter } from 'events';
 
+/**
+ * The main class used to fetch things.
+ */
 export class Fetcher extends EventEmitter {
-	public totalMessages: Collection<Snowflake, Message>;
+	/**
+	 * A simple property set to `true` when the Fetcher is fetching a bulk of messages, then set to false.
+	 */
 	public fetching: boolean;
-
+	
+	/**
+	 * Creates a new Fetcher.
+	 *
+	 * @param client - Needs the client to fetch things.
+	 */
 	public constructor(public readonly client: Client) {
 		super();
-		this.totalMessages = new Collection();
 		this.fetching = false;
 	}
-
+	
+	/**
+	 * Fetch the entire list of messages from a channel, can be long and makes you have rateLimits.
+	 *
+	 * @param channelID - The channel, can be an ID or a Channel.
+	 * @returns The messages fetched.
+	 */
 	public async fetchChannel(channelID: Snowflake | TextChannel): Promise<Collection<Snowflake, Message>> {
 		const channel = channelID instanceof TextChannel ? channelID : await this.client.channels.fetch(channelID);
 		let messages = new Collection<Snowflake, Message>();
@@ -36,7 +51,16 @@ export class Fetcher extends EventEmitter {
 		}
 		return messages;
 	}
-
+	
+	/**
+	 * Fetch an entire guild, fetching every TextChannels one by one because there is no other way.
+	 *
+	 * @remarks
+	 * Can be really long and you should prefer using events than waiting for it to finish.
+	 *
+	 * @param guildID - The guild to fetch, can be an ID or a Guild.
+	 * @returns The messages fetched.
+	 */
 	public async fetchGuild(guildID: Snowflake | Guild): Promise<Collection<Snowflake, Message>> {
 		const guild = guildID instanceof Guild ? guildID : await this.client.guilds.fetch(guildID);
 		let messages = new Collection<Snowflake, Message>();
