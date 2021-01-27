@@ -9,7 +9,7 @@ export class Fetcher extends EventEmitter {
 	 * A simple property set to `true` when the Fetcher is fetching a bulk of messages, then set to false.
 	 */
 	public fetching: boolean;
-	
+
 	/**
 	 * Creates a new Fetcher.
 	 *
@@ -19,7 +19,7 @@ export class Fetcher extends EventEmitter {
 		super();
 		this.fetching = false;
 	}
-	
+
 	/**
 	 * Fetch the entire list of messages from a channel, can be long and makes you have rateLimits.
 	 *
@@ -51,7 +51,7 @@ export class Fetcher extends EventEmitter {
 		}
 		return messages;
 	}
-	
+
 	/**
 	 * Fetch an entire guild, fetching every TextChannels one by one because there is no other way.
 	 *
