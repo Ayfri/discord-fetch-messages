@@ -51,6 +51,25 @@ export class Fetcher extends EventEmitter {
 		}
 		return messages;
 	}
+	
+	/**
+	 * Fetch an array of Snowflakes or TextChannels or a collection of TextChannels.
+	 * @param channels - The channels to fetch.
+	 * @returns - The messages fetched.
+	 */
+	public async fetchChannels(channels: Array<Snowflake | TextChannel> | Collection<Snowflake, TextChannel>): Promise<Collection<Snowflake, Message>> {
+		if (channels instanceof Collection) channels = channels.array();
+		let messages = new Collection<Snowflake, Message>();
+		
+		this.fetching = true;
+		for (const channel of channels) {
+			const channelMessages = await this.fetchChannel(channel);
+			messages = messages.concat(channelMessages);
+		}
+		this.fetching = false;
+		
+		return messages;
+	}
 
 	/**
 	 * Fetch an entire guild, fetching every TextChannels one by one because there is no other way.
