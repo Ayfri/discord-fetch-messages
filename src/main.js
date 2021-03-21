@@ -1,4 +1,4 @@
-const { deprecate } = require('util');
+const {deprecate} = require('util');
 
 /**
  * Fetch all the messages from a Discord TextChannel.

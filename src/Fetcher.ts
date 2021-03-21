@@ -1,5 +1,5 @@
-import { Client, Message, Collection, Snowflake, TextChannel, Guild } from 'discord.js';
-import { EventEmitter } from 'events';
+import {Client, Collection, Guild, Message, Snowflake, TextChannel} from 'discord.js';
+import {EventEmitter} from 'events';
 
 /**
  * The main class used to fetch things.
@@ -51,7 +51,7 @@ export class Fetcher extends EventEmitter {
 		}
 		return messages;
 	}
-	
+
 	/**
 	 * Fetch an array of Snowflakes or TextChannels or a collection of TextChannels.
 	 * @param channels - The channels to fetch.
@@ -60,14 +60,14 @@ export class Fetcher extends EventEmitter {
 	public async fetchChannels(channels: Array<Snowflake | TextChannel> | Collection<Snowflake, TextChannel>): Promise<Collection<Snowflake, Message>> {
 		if (channels instanceof Collection) channels = channels.array();
 		let messages = new Collection<Snowflake, Message>();
-		
+
 		this.fetching = true;
 		for (const channel of channels) {
 			const channelMessages = await this.fetchChannel(channel);
 			messages = messages.concat(channelMessages);
 		}
 		this.fetching = false;
-		
+
 		return messages;
 	}
 
