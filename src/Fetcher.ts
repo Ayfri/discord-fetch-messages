@@ -84,16 +84,9 @@ export class Fetcher extends EventEmitter {
 		const guild = guildID instanceof Guild ? guildID : await this.client.guilds.fetch(guildID);
 		let messages = new Collection<Snowflake, Message>();
 		if (guild) {
-			this.fetching = true;
 			const channels = guild.channels.cache.filter(c => c.isText()) as Collection<Snowflake, TextChannel>;
 			this.emit('fetchGuild', guild);
-
-			for (const channel of channels.array()) {
-				const channelMessages = await this.fetchChannel(channel);
-				messages = messages.concat(channelMessages);
-			}
-
-			this.fetching = false;
+			messages = await this.fetchChannels(channels);
 		}
 
 		return messages;
