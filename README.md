@@ -21,11 +21,11 @@ fetcher.on('fetchChannel', async channel => {
 	await message.channel.send(`Fetching <#${channel.id}>.`);
 });
 
-await fetcher.fetchGuild(guildID);
-await fetcher.fetchChannel(channel);
-```
+const guildMessages = await fetcher.fetchGuild(guildID);
+const channelMessages = await fetcher.fetchChannel(channel);
 
-##
+const channelsMessages = await fetcher.fetchChannels(guild.channels.filter(channels => channel.isText() && channel.name.startsWith('g')));
+```
 
 ## Event list :
 
