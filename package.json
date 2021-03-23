@@ -1,5 +1,5 @@
 {
-	"description": "A npm package for fetching messages from a Discord Guild or a Discord Channel.",
+	"description": "A npm package for fetching messages from a Discord Guild, Channel or Channel list.",
 	"devDependencies": {
 		"@types/node": "^14.14.35",
 		"prettier": "^2.2.1",
@@ -17,7 +17,9 @@
 		"discord.js",
 		"discord-messages",
 		"discord-bot",
-		"fetch"
+		"fetch",
+		"fetch-messages",
+		"discord-fetch"
 	],
 	"main": "index.js",
 	"name": "discord-fetch-messages",
