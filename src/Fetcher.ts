@@ -1,6 +1,12 @@
 import {Client, Collection, Guild, Message, Snowflake, TextChannel} from 'discord.js';
 import {EventEmitter} from 'events';
 
+export interface Events {
+	fetch: [size: number, messages: Collection<Snowflake, Message>];
+	fetchChannel: [channel: TextChannel];
+	fetchGuild: [guild: Guild];
+}
+
 /**
  * The main class used to fetch things.
  */
@@ -20,6 +26,26 @@ export class Fetcher extends EventEmitter {
 		this.fetching = false;
 	}
 
+	public on<K extends keyof Events>(event: K, listener: (args: Events[K]) => void): this {
+		return super.on(event, listener);
+	}
+
+	public once<K extends keyof Events>(event: K, listener: (args: Events[K]) => void): this {
+		return super.on(event, listener);
+	}
+
+	public emit<K extends keyof Events>(event: K, ...args: Events[K]): boolean {
+		return super.emit(event, args);
+	}
+
+	public eventNames(): (keyof Events)[] {
+		return super.eventNames() as (keyof Events)[];
+	}
+
+	public off<K extends keyof Events>(event: K, listener: (args: Events[K]) => void): this {
+		return super.off(event, listener);
+	}
+
 	/**
 	 * Fetch the entire list of messages from a channel, can be long and makes you have rateLimits.
 	 *
@@ -30,7 +56,7 @@ export class Fetcher extends EventEmitter {
 		const channel = channelID instanceof TextChannel ? channelID : await this.client.channels.fetch(channelID);
 		let messages = new Collection<Snowflake, Message>();
 
-		if (channel.isText()) {
+		if (channel instanceof TextChannel) {
 			this.emit('fetchChannel', channel);
 			this.fetching = true;
 			let channelMessages = await channel.messages.fetch({
