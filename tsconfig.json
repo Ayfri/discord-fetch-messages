@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"alwaysStrict": true,
-		"allowJs": true,
 		"declaration": true,
 		"declarationDir": "types",
 		"lib": ["ESNext"],
@@ -12,8 +11,9 @@
 		"pretty": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"target": "esNext"
+		"target": "ESNext"
 	},
 	"exclude": ["node_modules"],
-	"files": ["src/main.js", "src/index.ts", "src/Fetcher.ts"]
+	"files": [
+		"src/main", "src/index.ts", "src/Fetcher.ts"]
 }
