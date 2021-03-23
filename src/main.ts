@@ -1,4 +1,5 @@
-const {deprecate} = require('util');
+import {Client, Collection, Message, Snowflake, TextChannel} from 'discord.js';
+import {deprecate} from 'util';
 
 /**
  * Fetch all the messages from a Discord TextChannel.
@@ -8,8 +9,8 @@ const {deprecate} = require('util');
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
  * @deprecated Use {@link Fetcher} class instead.
  */
-async function fetchChannelMessages(client, channel) {
-	const total = [];
+async function fetchChannelMessages(client: Client, channel: TextChannel): Promise<Message[]> {
+	const total: Message[] = [];
 	let lastMessageID;
 	let messages;
 
@@ -29,13 +30,15 @@ async function fetchChannelMessages(client, channel) {
 
 		if (messages.size === 0) break;
 
-		lastMessageID = messages.last().id;
+		lastMessageID = messages.last()?.id;
 		console.log(`#${channel.name} : ${total.length}`);
 		total.push(...messages.array());
 	}
 
 	return total;
 }
+
+type ChannelMessages = {id: Snowflake; messages: Message[]};
 
 /**
  * Fetch all the messages from a Discord Guild.
@@ -44,9 +47,10 @@ async function fetchChannelMessages(client, channel) {
  * @returns {Promise<module:"discord.js".Message[]>} - All the messages fetched.
  * @deprecated Use {@link Fetcher} class instead.
  */
-async function fetchGuildMessages(client, guildID) {
-	const total = [];
-	const channels = client.guilds.cache.get(guildID).channels.cache.filter(c => c.isText());
+async function fetchGuildMessages(client: Client, guildID: Snowflake): Promise<ChannelMessages[]> {
+	const total: ChannelMessages[] = [];
+	if (!client.guilds.cache.has(guildID)) return total;
+	const channels = client.guilds.cache.get(guildID)!.channels.cache.filter(c => c.isText()) as Collection<Snowflake, TextChannel>;
 	console.log(
 		`Getting the messages from these channels : ${channels
 			.map(c => `#${c.name}`)
@@ -63,7 +67,7 @@ async function fetchGuildMessages(client, guildID) {
 				id: textChannel.id,
 				messages: [],
 			});
-		total.find(channel => channel.id === textChannel.id).messages.push(...messages.map(m => m.cleanContent));
+		total.find(channel => channel.id === textChannel.id)!.messages.push(...messages);
 	}
 
 	console.log(`Finished fetching messages, messages count: ${total.length}`);
