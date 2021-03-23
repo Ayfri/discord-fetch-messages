@@ -1,2 +1,2 @@
 export {fetchChannelMessages, fetchGuildMessages} from './main.js';
-export {Fetcher} from './Fetcher';
+export {Fetcher, Events} from './Fetcher';
