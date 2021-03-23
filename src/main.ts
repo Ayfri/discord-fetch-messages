@@ -77,7 +77,4 @@ async function fetchGuildMessages(client: Client, guildID: Snowflake): Promise<C
 deprecate(fetchChannelMessages, 'fetchChannelMessages() is deprecated. Use Fetcher class instead.');
 deprecate(fetchGuildMessages, 'fetchGuildMessages() is deprecated. Use Fetcher class instead.');
 
-module.exports = {
-	fetchGuildMessages,
-	fetchChannelMessages,
-};
+export {fetchGuildMessages, fetchChannelMessages};
