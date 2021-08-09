@@ -4,7 +4,7 @@
 		"url": "https://github.com/Ayfri/discord-fetch/issues"
 	},
 	"dependencies": {
-		"discord.js": "^12.5.1"
+		"discord.js": "^13.0.1"
 	},
 	"description": "A npm package for fetching messages from a Discord Guild, Channel or Channel list.",
 	"devDependencies": {
