@@ -14,5 +14,5 @@
 		"target": "ESNext"
 	},
 	"exclude": ["node_modules"],
-	"files": ["src/main", "src/index.ts", "src/Fetcher.ts"]
+	"files": ["src/main.ts", "src/index.ts", "src/Fetcher.ts"]
 }
