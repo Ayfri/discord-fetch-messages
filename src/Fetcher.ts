@@ -1,5 +1,4 @@
 import {Client, Collection, Guild, Message, NewsChannel, Permissions, Snowflake, TextChannel, ThreadChannel} from 'discord.js';
-
 import {EventEmitter} from 'events';
 
 export interface Events {
