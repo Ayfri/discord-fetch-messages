@@ -121,15 +121,16 @@ export class Fetcher extends EventEmitter {
 	 * Can be really long and you should prefer using events than waiting for it to finish.
 	 *
 	 * @param guildID - The guild to fetch, can be an ID or a Guild.
+     * @param threads - If set to `true` it will fetch all the threads of the guild.
 	 * @returns The messages fetched.
 	 */
-	public async fetchGuild(guildID: Snowflake | Guild) {
+	public async fetchGuild(guildID: Snowflake | Guild, threads: boolean = false) {
 		const guild = guildID instanceof Guild ? guildID : await this.client.guilds.fetch(guildID);
 		let messages = new Collection<Snowflake, Message>();
 		if (guild) {
 			const channels = guild.channels.cache.filter(c => c.isText() && !c.isThread()) as Collection<Snowflake, FetchChannel>;
 			this.emit('fetchGuild', guild);
-			messages = await this.fetchChannels(channels);
+			messages = await this.fetchChannels(channels, threads);
 		}
 
 		return messages;
