@@ -1,11 +1,12 @@
-import {Client, Collection, Guild, Message, NewsChannel, Snowflake, TextChannel} from 'discord.js';
+import {Channel, Client, Collection, Guild, Message, NewsChannel, Permissions, Snowflake, TextChannel, ThreadChannel} from 'discord.js';
 
 import {EventEmitter} from 'events';
 
 export interface Events {
 	fetch: [size: number, messages: Collection<Snowflake, Message>];
-	fetchChannel: [channel: TextChannel];
+	fetchChannel: [channel: FetchChannel];
 	fetchGuild: [guild: Guild];
+    fetchThread: [thread: ThreadChannel, parentChannel: FetchChannel | null];
 }
 
 type FetchChannel = NewsChannel | TextChannel;
@@ -49,6 +50,10 @@ export class Fetcher extends EventEmitter {
 		return super.off(event, listener);
 	}
 
+    private isFetchChannel(channel: any): channel is TextChannel | NewsChannel {
+        return channel instanceof TextChannel || channel instanceof NewsChannel;
+    }
+
 	/**
 	 * Fetch the entire list of messages from a channel, can be long and makes you have rateLimits.
 	 *
@@ -59,7 +64,7 @@ export class Fetcher extends EventEmitter {
 		const channel = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
 		let messages = new Collection<Snowflake, Message>();
 
-		if (channel instanceof TextChannel) {
+		if (this.isFetchChannel(channel)) {
 			this.emit('fetchChannel', channel);
 			this.fetching = true;
 			let channelMessages = await channel.messages.fetch({
@@ -78,11 +83,13 @@ export class Fetcher extends EventEmitter {
 
 			this.fetching = false;
 		}
+
 		return messages;
 	}
 
 	/**
 	 * Fetch an array of Snowflakes or TextChannels or a collection of TextChannels.
+     * 
 	 * @param channels - The channels to fetch.
 	 * @returns - The messages fetched.
 	 */
@@ -120,4 +127,101 @@ export class Fetcher extends EventEmitter {
 
 		return messages;
 	}
+
+    public async fetchThread(thread: ThreadChannel): Promise<Collection<Snowflake, Message>>;
+    public async fetchThread(threadID: Snowflake, channelID: Snowflake | FetchChannel): Promise<Collection<Snowflake, Message>>;
+    /**
+     * Fetch the entire list of messages from a Thread.
+     * 
+     * @remarks
+     * If the thread is private, the client need the `MANAGE_THREADS` permissions.
+     * 
+     * @param threadID - The thread ID or Thread itself, if an ID is provided you have to set the second paramter.
+     * @param channelID - The channel ID or Channel itself of the Thread, only necessary if you provide a Thread ID, else it is not used.
+     * @returns The messages fetched.
+     */
+    public async fetchThread(threadID: Snowflake | ThreadChannel, channelID?: Snowflake | FetchChannel) {
+        let messages = new Collection<Snowflake, Message>();
+
+        if (typeof threadID === 'string' && !channelID) throw Error('channelID is required when using ThreadID.');
+        let thread: ThreadChannel | null = null;
+        if (threadID instanceof ThreadChannel) thread = threadID;
+        else if (channelID) {
+            const channel = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
+            if (this.isFetchChannel(channel)) thread = await channel.threads.fetch(threadID);
+            else return messages;
+        }
+
+        if (thread) {
+            if (thread.type === 'GUILD_PRIVATE_THREAD' && !thread.permissionsFor(this.client.user!)?.has(Permissions.FLAGS.MANAGE_THREADS, false)) {
+                return messages;
+            }
+
+            this.fetching = true;
+            this.emit('fetchThread', thread, thread.parent);
+            let threadMessages = await thread.messages.fetch({
+				limit: 100,
+			});
+			this.emit('fetch', threadMessages.size, threadMessages);
+
+			while (threadMessages.size > 0) {
+				messages = messages.concat(threadMessages);
+				threadMessages = await thread.messages.fetch({
+					limit: 100,
+					before: threadMessages.last()!.id,
+				});
+				this.emit('fetch', threadMessages.size, threadMessages);
+			}
+
+            this.fetching = false;
+        }
+
+        return messages;
+    }
+
+    public async fetchThreads(channel: FetchChannel): Promise<Collection<Snowflake, Message>>;
+    public async fetchThreads(threadsIDs: Array<ThreadChannel> | Collection<Snowflake, ThreadChannel>): Promise<Collection<Snowflake, Message>>;
+    public async fetchThreads(threadsIDs: Array<Snowflake> | Collection<Snowflake, Snowflake>, channelID: Snowflake | FetchChannel): Promise<Collection<Snowflake, Message>>;
+    /**
+     * Fetch the entire list of messages from multiple threads or all the threads of a channel.
+     * 
+     * @remarks
+     * If one of the thread is private, it will need the `MANAGE_THREADS` permission to be able to fetch its messages.
+     * 
+     * @params threadsIDs - A list or a collection of threads or snowflakes to fetch messages from, if snowflakes are provided, you will need the second argument, or a channel where it will fetch all its channels.
+     * @param channelID - The channel ID or the Channel itself parant to all the threads passed as snowflakes, it will fetch the threads from this channel.
+     * @returns - All the messages fetched.  
+     */
+    public async fetchThreads(threadsIDs: Array<Snowflake | ThreadChannel> | Collection<Snowflake, Snowflake | ThreadChannel> | FetchChannel, channelID?: Snowflake | FetchChannel) {
+        let messages = new Collection<Snowflake, Message>();
+        let threads: Array<ThreadChannel> = [];
+        let channel: FetchChannel | null = null;
+        if (channelID) {
+            const c = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
+            if (this.isFetchChannel(c)) channel = c;
+        }
+        
+        
+        async function resolveThread(thread: Snowflake | ThreadChannel) {
+            if (thread instanceof ThreadChannel) {
+                threads.push(thread);
+            } else {
+                if (channel) {
+                    const t = await channel.threads.fetch(thread); 
+                    if (t) threads.push(t);
+                }
+            }
+        }
+
+        if (this.isFetchChannel(threadsIDs)) threads = [...(await threadsIDs.threads.fetch()).threads.values()];
+        else if (threadsIDs instanceof Collection)  [...threadsIDs.values()].forEach(resolveThread);
+        else threadsIDs.forEach(resolveThread);
+        
+        threads.forEach(async (thread) => {
+            const threadMessages = await this.fetchThread(thread);
+            messages = messages.concat(threadMessages);
+        });
+
+        return messages;
+    }
 }
