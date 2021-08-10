@@ -26,23 +26,23 @@ export class Fetcher extends EventEmitter {
 		this.fetching = false;
 	}
 
-	public on<K extends keyof Events>(event: K, listener: (args: Events[K]) => void): this {
+	public on<K extends keyof Events>(event: K, listener: (args: Events[K]) => void) {
 		return super.on(event, listener);
 	}
 
-	public once<K extends keyof Events>(event: K, listener: (args: Events[K]) => void): this {
+	public once<K extends keyof Events>(event: K, listener: (args: Events[K]) => void) {
 		return super.on(event, listener);
 	}
 
-	public emit<K extends keyof Events>(event: K, ...args: Events[K]): boolean {
+	public emit<K extends keyof Events>(event: K, ...args: Events[K]) {
 		return super.emit(event, args);
 	}
 
-	public eventNames(): (keyof Events)[] {
-		return super.eventNames() as (keyof Events)[];
+	public eventNames() {
+		return super.eventNames() as Array<keyof Events>;
 	}
 
-	public off<K extends keyof Events>(event: K, listener: (args: Events[K]) => void): this {
+	public off<K extends keyof Events>(event: K, listener: (args: Events[K]) => void) {
 		return super.off(event, listener);
 	}
 
@@ -52,7 +52,7 @@ export class Fetcher extends EventEmitter {
 	 * @param channelID - The channel, can be an ID or a Channel.
 	 * @returns The messages fetched.
 	 */
-	public async fetchChannel(channelID: Snowflake | TextChannel): Promise<Collection<Snowflake, Message>> {
+	public async fetchChannel(channelID: Snowflake | TextChannel) {
 		const channel = channelID instanceof TextChannel ? channelID : await this.client.channels.fetch(channelID);
 		let messages = new Collection<Snowflake, Message>();
 
@@ -83,8 +83,8 @@ export class Fetcher extends EventEmitter {
 	 * @param channels - The channels to fetch.
 	 * @returns - The messages fetched.
 	 */
-	public async fetchChannels(channels: Array<Snowflake | TextChannel> | Collection<Snowflake, TextChannel>): Promise<Collection<Snowflake, Message>> {
-		if (channels instanceof Collection) channels = channels.array();
+	public async fetchChannels(channels: Array<Snowflake | TextChannel> | Collection<Snowflake, TextChannel>) {
+		if (channels instanceof Collection) channels = [...channels.values()];
 		let messages = new Collection<Snowflake, Message>();
 
 		this.fetching = true;
@@ -106,7 +106,7 @@ export class Fetcher extends EventEmitter {
 	 * @param guildID - The guild to fetch, can be an ID or a Guild.
 	 * @returns The messages fetched.
 	 */
-	public async fetchGuild(guildID: Snowflake | Guild): Promise<Collection<Snowflake, Message>> {
+	public async fetchGuild(guildID: Snowflake | Guild) {
 		const guild = guildID instanceof Guild ? guildID : await this.client.guilds.fetch(guildID);
 		let messages = new Collection<Snowflake, Message>();
 		if (guild) {
