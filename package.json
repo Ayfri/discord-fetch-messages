@@ -31,7 +31,6 @@
 	"prettier": {
 		"arrowParens": "avoid",
 		"bracketSpacing": false,
-		"endOfLine": "lf",
 		"printWidth": 200,
 		"singleQuote": true,
 		"tabWidth": 4,
