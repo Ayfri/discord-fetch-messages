@@ -1,13 +1,9 @@
 {
 	"compilerOptions": {
-		"alwaysStrict": true,
 		"declaration": true,
 		"lib": ["ESNext"],
 		"module": "commonjs",
-		"moduleResolution": "node",
-		"noImplicitAny": true,
 		"outDir": "dist",
-		"pretty": true,
         "rootDir": "src",
 		"skipLibCheck": true,
 		"strict": true,
