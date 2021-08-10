@@ -97,15 +97,16 @@ export class Fetcher extends EventEmitter {
 	 * Fetch an array of Snowflakes or TextChannels or a collection of TextChannels.
      * 
 	 * @param channels - The channels to fetch.
+     * @param threads - If set to `true` it will fetch all the threads of all the channels.
 	 * @returns - The messages fetched.
 	 */
-	public async fetchChannels(channels: Array<Snowflake | FetchChannel> | Collection<Snowflake, FetchChannel>) {
+	public async fetchChannels(channels: Array<Snowflake | FetchChannel> | Collection<Snowflake, FetchChannel>, threads: boolean = false) {
 		if (channels instanceof Collection) channels = [...channels.values()];
 		let messages = new Collection<Snowflake, Message>();
 
 		this.fetching = true;
 		for (const channel of channels) {
-			const channelMessages = await this.fetchChannel(channel);
+			const channelMessages = await this.fetchChannel(channel, threads);
 			messages = messages.concat(channelMessages);
 		}
 		this.fetching = false;
