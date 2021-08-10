@@ -25,7 +25,9 @@ const guildMessages = await fetcher.fetchGuild(guildID);
 const channelMessages = await fetcher.fetchChannel(channel);
 const threadMessages = await fetcher.fetchThread(thread);
 
-const channelsMessages = await fetcher.fetchChannels(guild.channels.filter(channel => channel.isText() && channel.name.startsWith('g')));
+const channelsMessages = await fetcher.fetchChannels(
+    guild.channels.filter(channel => channel.isText() && !channel.isThread() && channel.name.startsWith('g'))
+);
 const guildMessagesAndThreads = await fetcher.fetchGuild(guildID, true);
 
 const threadsMessages = await fetcher.fetchThreads(threadsIDs, parentChannelOfThreads);
@@ -38,8 +40,8 @@ const threadsMessages = await fetcher.fetchThreads(threadsIDs, parentChannelOfTh
 | `fetchChannel` | Emitter when fetching a Channel.                                         | `channel`: The channel fetched.                                                                  |
 | `fetchGuild`   | Emitted when fetching a Guild.                                           | `guild`: The guild fetched.                                                                      |
 | `fetch`        | Emitted after fetched a bulk a of messages, can fetch 0 to 100 messages. | `length`: The number of messages fetched.<br/>`messages`: The messages fetched, as a Collection. |
-| `fetchThread` | Emitted when fetching a Thread.                                           | `thread`: The thread
-fetched.<br/>`channel`: The parent channel of the Thread. |
+| `fetchThread` | Emitted when fetching a Thread.                                           | `thread`: The thread fetched.<br/>`channel`: The parent channel of the thread. |
+
 You can also use a `fetching` boolean property that is set to true when fetching a bulk of message, then to false.
 
 > Note :
