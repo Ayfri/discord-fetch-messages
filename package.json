@@ -44,8 +44,8 @@
 		"url": "https://github.com/Ayfri/discord-fetch"
 	},
 	"scripts": {
-		"build": "npm run prettier && tsc",
-		"prepare": "npm run build",
+		"build": "tsc",
+		"prepublishOnly": "npm run prettier && npm run build",
 		"prettier": "prettier . --write"
 	},
 	"types": "types",
