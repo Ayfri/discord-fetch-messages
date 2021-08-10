@@ -1,4 +1,5 @@
-import {Client, Collection, Guild, Message, Snowflake, TextChannel} from 'discord.js';
+import {Client, Collection, Guild, Message, NewsChannel, Snowflake, TextChannel} from 'discord.js';
+
 import {EventEmitter} from 'events';
 
 export interface Events {
@@ -6,6 +7,8 @@ export interface Events {
 	fetchChannel: [channel: TextChannel];
 	fetchGuild: [guild: Guild];
 }
+
+type FetchChannel = NewsChannel | TextChannel;
 
 /**
  * The main class used to fetch things.
@@ -52,8 +55,8 @@ export class Fetcher extends EventEmitter {
 	 * @param channelID - The channel, can be an ID or a Channel.
 	 * @returns The messages fetched.
 	 */
-	public async fetchChannel(channelID: Snowflake | TextChannel) {
-		const channel = channelID instanceof TextChannel ? channelID : await this.client.channels.fetch(channelID);
+	public async fetchChannel(channelID: Snowflake | FetchChannel) {
+		const channel = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
 		let messages = new Collection<Snowflake, Message>();
 
 		if (channel instanceof TextChannel) {
@@ -83,7 +86,7 @@ export class Fetcher extends EventEmitter {
 	 * @param channels - The channels to fetch.
 	 * @returns - The messages fetched.
 	 */
-	public async fetchChannels(channels: Array<Snowflake | TextChannel> | Collection<Snowflake, TextChannel>) {
+	public async fetchChannels(channels: Array<Snowflake | FetchChannel> | Collection<Snowflake, FetchChannel>) {
 		if (channels instanceof Collection) channels = [...channels.values()];
 		let messages = new Collection<Snowflake, Message>();
 
@@ -110,7 +113,7 @@ export class Fetcher extends EventEmitter {
 		const guild = guildID instanceof Guild ? guildID : await this.client.guilds.fetch(guildID);
 		let messages = new Collection<Snowflake, Message>();
 		if (guild) {
-			const channels = guild.channels.cache.filter(c => c.isText()) as Collection<Snowflake, TextChannel>;
+			const channels = guild.channels.cache.filter(c => c.isText() && !c.isThread()) as Collection<Snowflake, FetchChannel>;
 			this.emit('fetchGuild', guild);
 			messages = await this.fetchChannels(channels);
 		}
