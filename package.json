@@ -46,7 +46,7 @@
 	"scripts": {
 		"build": "tsc",
 		"prepublishOnly": "npm run prettier && npm run build",
-		"prettier": "prettier . --write"
+		"prettier": "prettier src *.json *.md --write"
 	},
 	"types": "types",
 	"version": "2.2.1"
