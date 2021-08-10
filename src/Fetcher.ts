@@ -58,9 +58,10 @@ export class Fetcher extends EventEmitter {
 	 * Fetch the entire list of messages from a channel, can be long and makes you have rateLimits.
 	 *
 	 * @param channelID - The channel, can be an ID or a Channel.
+     * @param threads - If set to `true` it will fetch its threads.
 	 * @returns The messages fetched.
 	 */
-	public async fetchChannel(channelID: Snowflake | FetchChannel) {
+	public async fetchChannel(channelID: Snowflake | FetchChannel, threads: boolean = false) {
 		const channel = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
 		let messages = new Collection<Snowflake, Message>();
 
@@ -80,6 +81,11 @@ export class Fetcher extends EventEmitter {
 				});
 				this.emit('fetch', channelMessages.size, channelMessages);
 			}
+
+            if (threads) {
+                const threadsMessages = await this.fetchThreads(channel);
+                messages = messages.concat(threadsMessages);
+            }
 
 			this.fetching = false;
 		}
