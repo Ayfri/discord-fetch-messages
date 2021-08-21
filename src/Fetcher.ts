@@ -8,7 +8,7 @@ export interface Events {
 	fetchThread: [thread: ThreadChannel, parentChannel: FetchChannel | null];
 }
 
-type FetchChannel = NewsChannel | TextChannel;
+export type FetchChannel = NewsChannel | TextChannel;
 
 function isFetchChannel(channel: any): channel is TextChannel | NewsChannel {
 	return channel instanceof TextChannel || channel instanceof NewsChannel;
