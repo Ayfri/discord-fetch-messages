@@ -6,7 +6,7 @@
 	"dependencies": {
 		"discord.js": "^13.0.1"
 	},
-	"description": "A npm package for fetching messages from a Discord Guild, Channel or Channel list.",
+	"description": "A npm package for fetching messages from a Discord Guild, Guild list, Channel, Channel list, Thread or Thread list.",
 	"devDependencies": {
 		"@types/node": "^16.4.13",
 		"prettier": "^2.3.2",
@@ -48,5 +48,5 @@
 		"prettier": "prettier src *.json *.md --write"
 	},
 	"types": "dist",
-	"version": "2.3.0"
+	"version": "2.4.0"
 }
