@@ -33,12 +33,12 @@ export class Fetcher extends EventEmitter {
 		this.fetching = false;
 	}
 
-	public on<K extends keyof Events>(event: K, listener: (args: Events[K]) => void) {
-		return super.on(event, listener);
+	public on<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void) {
+		return super.on(event, listener as (...args: any[]) => void);
 	}
 
-	public once<K extends keyof Events>(event: K, listener: (args: Events[K]) => void) {
-		return super.on(event, listener);
+	public once<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void) {
+		return super.on(event, listener as (...args: any[]) => void);
 	}
 
 	public emit<K extends keyof Events>(event: K, ...args: Events[K]) {
@@ -49,8 +49,8 @@ export class Fetcher extends EventEmitter {
 		return super.eventNames() as Array<keyof Events>;
 	}
 
-	public off<K extends keyof Events>(event: K, listener: (args: Events[K]) => void) {
-		return super.off(event, listener);
+	public off<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void) {
+		return super.off(event, listener as (...args: any[]) => void);
 	}
 
 	/**
