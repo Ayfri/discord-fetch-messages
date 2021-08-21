@@ -10,6 +10,10 @@ export interface Events {
 
 type FetchChannel = NewsChannel | TextChannel;
 
+function isFetchChannel(channel: any): channel is TextChannel | NewsChannel {
+	return channel instanceof TextChannel || channel instanceof NewsChannel;
+}
+
 /**
  * The main class used to fetch things.
  */
@@ -49,10 +53,6 @@ export class Fetcher extends EventEmitter {
 		return super.off(event, listener);
 	}
 
-	private isFetchChannel(channel: any): channel is TextChannel | NewsChannel {
-		return channel instanceof TextChannel || channel instanceof NewsChannel;
-	}
-
 	/**
 	 * Fetch the entire list of messages from a channel, can be long and makes you have rateLimits.
 	 *
@@ -64,7 +64,7 @@ export class Fetcher extends EventEmitter {
 		const channel = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
 		let messages = new Collection<Snowflake, Message>();
 
-		if (this.isFetchChannel(channel)) {
+		if (isFetchChannel(channel)) {
 			this.emit('fetchChannel', channel);
 			this.fetching = true;
 			let channelMessages = await channel.messages.fetch({limit: 100});
@@ -154,7 +154,7 @@ export class Fetcher extends EventEmitter {
 		if (threadID instanceof ThreadChannel) thread = threadID;
 		else if (channelID) {
 			const channel = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
-			if (this.isFetchChannel(channel)) thread = await channel.threads.fetch(threadID);
+			if (isFetchChannel(channel)) thread = await channel.threads.fetch(threadID);
 			else return messages;
 		}
 
@@ -191,12 +191,12 @@ export class Fetcher extends EventEmitter {
 	/**
 	 * Fetch the entire list of messages from multiple threads or all the threads of a channel or all threads of a guild.
 	 * For now it will only fetch the active threads.
-	 * 
+	 *
 	 * @remarks
 	 * If one of the thread is private, it will need the `MANAGE_THREADS` permission to be able to fetch its messages.
 	 *
 	 * @param threadsIDs - A list or a collection of threads or snowflakes to fetch messages from, if snowflakes are provided, you will need the second argument, or a channel where it will fetch all its channels, or a guild where it will fetch all its threads from all its channels.
-	 * @param channelID - The channel ID or the Channel itself parant to all the threads passed as snowflakes, it will fetch the threads from this channel.
+	 * @param channelID - The channel ID or the Channel itself parent to all the threads passed as snowflakes, it will fetch the threads from this channel.
 	 * @returns - All the messages fetched.
 	 */
 	public async fetchThreads(threadsIDs: Array<Snowflake | ThreadChannel> | Collection<Snowflake, Snowflake | ThreadChannel> | FetchChannel | Guild, channelID?: Snowflake | FetchChannel) {
@@ -205,7 +205,7 @@ export class Fetcher extends EventEmitter {
 		let channel: FetchChannel | null = null;
 		if (channelID) {
 			const c = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
-			if (this.isFetchChannel(c)) channel = c;
+			if (isFetchChannel(c)) channel = c;
 		}
 
 		async function resolveThread(thread: Snowflake | ThreadChannel) {
@@ -218,15 +218,16 @@ export class Fetcher extends EventEmitter {
 				}
 			}
 		}
-		if (threadsIDs instanceof Guild) threads = (await Promise.all((await threadsIDs.channels.fetch()).filter(this.isFetchChannel).map(async c => [...(await c.threads.fetch()).threads.values()]))).flat();
-		else if (this.isFetchChannel(threadsIDs)) threads = [...(await threadsIDs.threads.fetch()).threads.values()];
+		if (threadsIDs instanceof Guild)
+			threads = (await Promise.all((await threadsIDs.channels.fetch()).filter(isFetchChannel).map(async c => [...(await c.threads.fetch()).threads.values()]))).flat();
+		else if (isFetchChannel(threadsIDs)) threads = [...(await threadsIDs.threads.fetch()).threads.values()];
 		else if (threadsIDs instanceof Collection) [...threadsIDs.values()].forEach(resolveThread);
 		else threadsIDs.forEach(resolveThread);
 
-		threads.forEach(async thread => {
+		for (const thread of threads) {
 			const threadMessages = await this.fetchThread(thread);
 			messages = messages.concat(threadMessages);
-		});
+		}
 
 		return messages;
 	}
