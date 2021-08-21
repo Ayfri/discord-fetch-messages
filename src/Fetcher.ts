@@ -8,6 +8,9 @@ export interface Events {
 	fetchThread: [thread: ThreadChannel, parentChannel: FetchChannel | null];
 }
 
+/**
+ * A fetchable TextChannel.
+ */
 export type FetchChannel = NewsChannel | TextChannel;
 
 function isFetchChannel(channel: any): channel is TextChannel | NewsChannel {
@@ -58,7 +61,7 @@ export class Fetcher extends EventEmitter {
 	 *
 	 * @param channelID - The channel, can be an ID or a Channel.
 	 * @param threads - If set to `true` it will fetch its threads, for now it will only fetch the active threads.
-	 * @returns The messages fetched.
+	 * @returns - The messages fetched.
 	 */
 	public async fetchChannel(channelID: Snowflake | FetchChannel, threads: boolean = false) {
 		const channel = typeof channelID === 'string' ? await this.client.channels.fetch(channelID) : channelID;
@@ -120,7 +123,7 @@ export class Fetcher extends EventEmitter {
 	 *
 	 * @param guildID - The guild to fetch, can be an ID or a Guild.
 	 * @param threads - If set to `true` it will fetch all the threads of the guild, for now it will only fetch the active threads.
-	 * @returns The messages fetched.
+	 * @returns - The messages fetched.
 	 */
 	public async fetchGuild(guildID: Snowflake | Guild, threads: boolean = false) {
 		const guild = guildID instanceof Guild ? guildID : await this.client.guilds.fetch(guildID);
@@ -134,14 +137,18 @@ export class Fetcher extends EventEmitter {
 		return messages;
 	}
 
+	public async fetchGuilds(threads?: boolean): Promise<Collection<Snowflake, Message>>;
+	public async fetchGuilds(guilds: Collection<Snowflake, Guild> | Array<Guild>, threads: boolean): Promise<Collection<Snowflake, Message>>;
 	/**
 	 * Fetch all the guilds provided, if not all the guilds in the cache of the {@link client}.
 	 *
+	 * @remarks
+	 * Can be really long and you should prefer using events than waiting for it to finish.
+	 *
+	 * @param guilds - The guilds to fetch, if omitted it will fetch all the guilds cached by the client.
 	 * @param threads - If set to `true` it will fetch all the threads of the guilds, for now it will only fetch the active threads.
 	 * @returns - The messages fetched.
 	 */
-	public async fetchGuilds(threads?: boolean): Promise<Collection<Snowflake, Message>>;
-	public async fetchGuilds(guilds: Collection<Snowflake, Guild> | Array<Guild>, threads: boolean): Promise<Collection<Snowflake, Message>>;
 	public async fetchGuilds(guilds?: Collection<Snowflake, Guild> | Array<Guild> | boolean, threads: boolean = false) {
 		const guildList = guilds instanceof Collection ? [...guilds.values()] : guilds instanceof Array ? guilds : [...this.client.guilds.cache.values()];
 		const fetchThreads = typeof guilds === 'boolean' ? guilds : threads ?? false;
@@ -214,6 +221,7 @@ export class Fetcher extends EventEmitter {
 	 *
 	 * @remarks
 	 * If one of the thread is private, it will need the `MANAGE_THREADS` permission to be able to fetch its messages.
+	 * Can be really long and you should prefer using events than waiting for it to finish.
 	 *
 	 * @param threadsIDs - A list or a collection of threads or snowflakes to fetch messages from, if snowflakes are provided, you will need the second argument, or a channel where it will fetch all its channels, or a guild where it will fetch all its threads from all its channels.
 	 * @param channelID - The channel ID or the Channel itself parent to all the threads passed as snowflakes, it will fetch the threads from this channel.
@@ -238,9 +246,10 @@ export class Fetcher extends EventEmitter {
 				}
 			}
 		}
-		if (threadsIDs instanceof Guild)
+
+		if (threadsIDs instanceof Guild) {
 			threads = (await Promise.all((await threadsIDs.channels.fetch()).filter(isFetchChannel).map(async c => [...(await c.threads.fetch()).threads.values()]))).flat();
-		else if (isFetchChannel(threadsIDs)) threads = [...(await threadsIDs.threads.fetch()).threads.values()];
+		} else if (isFetchChannel(threadsIDs)) threads = [...(await threadsIDs.threads.fetch()).threads.values()];
 		else if (threadsIDs instanceof Collection) [...threadsIDs.values()].forEach(resolveThread);
 		else threadsIDs.forEach(resolveThread);
 
