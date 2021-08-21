@@ -134,6 +134,26 @@ export class Fetcher extends EventEmitter {
 		return messages;
 	}
 
+	/**
+	 * Fetch all the guilds provided, if not all the guilds in the cache of the {@link client}.
+	 *
+	 * @param threads - If set to `true` it will fetch all the threads of the guilds, for now it will only fetch the active threads.
+	 * @returns - The messages fetched.
+	 */
+	public async fetchGuilds(threads?: boolean): Promise<Collection<Snowflake, Message>>;
+	public async fetchGuilds(guilds: Collection<Snowflake, Guild> | Array<Guild>, threads: boolean): Promise<Collection<Snowflake, Message>>;
+	public async fetchGuilds(guilds?: Collection<Snowflake, Guild> | Array<Guild> | boolean, threads: boolean = false) {
+		const guildList = guilds instanceof Collection ? [...guilds.values()] : guilds instanceof Array ? guilds : [...this.client.guilds.cache.values()];
+		const fetchThreads = typeof guilds === 'boolean' ? guilds : threads ?? false;
+		let messages = new Collection<Snowflake, Message>();
+		for (const guild of guildList) {
+			const guildMessages = await this.fetchGuild(guild, fetchThreads);
+			messages = messages.concat(guildMessages);
+		}
+
+		return messages;
+	}
+
 	public async fetchThread(thread: ThreadChannel): Promise<Collection<Snowflake, Message>>;
 	public async fetchThread(threadID: Snowflake, channelID: Snowflake | FetchChannel): Promise<Collection<Snowflake, Message>>;
 	/**
