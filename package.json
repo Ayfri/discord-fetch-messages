@@ -49,5 +49,5 @@
 		"prettier": "prettier src *.json *.md --write"
 	},
 	"types": "dist",
-	"version": "2.4.0"
+	"version": "2.5.0"
 }
