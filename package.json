@@ -27,6 +27,7 @@
 	],
 	"license": "GNU",
 	"main": "dist",
+	"module": "dist/index.js",
 	"name": "discord-fetch-messages",
 	"prettier": {
 		"arrowParens": "avoid",
