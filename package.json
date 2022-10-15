@@ -41,7 +41,7 @@
 	"readme": "https://github.com/Ayfri/discord-fetch/blob/main/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Ayfri/discord-fetch"
+		"url": "https://github.com/Ayfri/discord-fetch-messages.git"
 	},
 	"scripts": {
 		"build": "tsc",
